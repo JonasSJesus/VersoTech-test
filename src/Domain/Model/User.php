@@ -4,15 +4,26 @@ namespace Jonas\Domain\Model;
 
 class User
 {
-    public readonly int $id;
+    private int $id;
     public readonly string $name;
     public readonly string $email;
+    public readonly ?Color $color;
 
-    public function __construct(int $id, string $name, string $email)
+    public function __construct(string $name, string $email, Color $color = null)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->email = $email;
+        $this->color = $color;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
 

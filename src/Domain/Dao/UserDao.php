@@ -15,6 +15,7 @@ class UserDao
         $this->conn = $conn->getConnection();
     }
 
+
     /** 
      * @return User[] 
      */
@@ -28,15 +29,17 @@ class UserDao
         }, $data);
     }
 
-    public function add(string $name, string $email): bool
+    public function add(User $user): int
     {
         $sql = "INSERT INTO users (name, email) VALUES (:name, :email);";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':name', $user->name);
+        $stmt->bindValue(':email', $user->email);
 
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $this->conn->lastInsertId();
     }
 
     public function getById(int $id)

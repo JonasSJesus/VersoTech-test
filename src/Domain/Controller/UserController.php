@@ -3,17 +3,18 @@
 namespace Jonas\Domain\Controller;
 
 use Jonas\Core\TemplateEngine\Renderer;
-use Jonas\Domain\Dao\UserDao;
+use Jonas\Domain\Model\User;
+use Jonas\Domain\Service\UserService;
 
 class UserController
 {
     use Renderer;
 
-    private UserDao $userDao;
+    private UserService $userService;
 
-    public function __construct(UserDao $userDao)
+    public function __construct(UserService $userService)
     {
-        $this->userDao = $userDao;
+        $this->userService = $userService;
     }
 
     public function index(): void
@@ -44,13 +45,17 @@ class UserController
     {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) ?? null;
+        $colors = $_POST['colors'];
 
         if (!$name || !$email) {
             header("Location: /insert-user");
             return;
         }
 
-        $this->userDao->add($name, $email);
+        $user = new User($name, $email);
+//        $color = new Color(); // TODO: fazer isso funcionar!
+
+        $this->userService->createUserWithColor($user, $colors);
     }
 
     public function update(): void
