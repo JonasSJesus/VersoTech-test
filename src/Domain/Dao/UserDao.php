@@ -3,6 +3,7 @@
 namespace Jonas\Domain\Dao;
 
 use Jonas\Core\Database\Connection;
+use Jonas\Domain\Model\Color;
 use Jonas\Domain\Model\User;
 use PDO;
 
@@ -21,12 +22,20 @@ class UserDao
      */
     public function all(): array
     {
-        $stmt = $this->conn->query("SELECT * FROM users;");
+        $sql = "SELECT u.id as userId,
+                       c.id AS colorId,
+                       u.name AS username,
+                       u.email,
+                       c.name AS colorname
+                FROM users AS u
+                LEFT JOIN user_colors AS uc ON u.id = uc.user_id
+                LEFT JOIN colors AS c ON uc.color_id = c.id;
+                ";
+
+        $stmt = $this->conn->query($sql);
         $data = $stmt->fetchAll();
 
-        return array_map(function ($dataFromDB) {
-            return $this->createObj($dataFromDB);
-        }, $data);
+        return $this->createObj($data);
     }
 
     public function add(User $user): int
@@ -44,13 +53,22 @@ class UserDao
 
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM users WHERE id = :id;";
+        $sql = "SELECT u.id AS userId,
+                       c.id AS colorId,
+                       u.name AS username,
+                       u.email,
+                       c.name AS colorname
+                FROM users AS u
+                LEFT JOIN user_colors AS uc ON u.id = uc.user_id
+                LEFT JOIN colors AS c ON uc.color_id = c.id
+                WHERE u.id = :id;
+                ";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        $data = $stmt->fetch();
+        $data = $stmt->fetchAll();
 
         return $this->createObj($data);
     }
@@ -80,7 +98,24 @@ class UserDao
 
     private function createObj(array $data)
     {
-        return new User($data['id'], $data['name'], $data['email']);
+        $userList = [];
+        foreach ($data as $row) {
+            if (!array_key_exists($row['userId'], $userList)) {
+                $user = new User($row['username'], $row['email']);
+                $user->setId($row['userId']);
+
+                $userList[$row['userId']] = $user;
+            }
+
+            if (!empty($row["colorId"]) && !empty($row["colorname"])) {
+                $color = new Color($row['colorname']);
+                $color->setId($row['colorId']);
+
+                $userList[$row['userId']]->setColor($color);
+            }
+        }
+
+        return $userList;
     }
 
 }

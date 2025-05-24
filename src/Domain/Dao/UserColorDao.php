@@ -24,4 +24,25 @@ class UserColorDao
 
         return $stmt->execute();
     }
+
+    public function getAllLinks()
+    {
+        $sql = "SELECT u.name,
+                       u.email,
+                       c.name
+                FROM users AS u
+                LEFT JOIN user_colors AS uc ON u.id = uc.user_id
+                LEFT JOIN colors AS c ON uc.color_id = c.id;
+                ";
+        
+        $stmt = $this->conn->query($sql);
+        $data = $stmt->fetchAll();
+        
+        return array_map();
+    }
+
+    public function createObj()
+    {
+        
+    }
 }

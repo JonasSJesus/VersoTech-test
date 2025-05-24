@@ -3,6 +3,7 @@
 namespace Jonas\Domain\Controller;
 
 use Jonas\Core\TemplateEngine\Renderer;
+use Jonas\Domain\Dao\UserDao;
 use Jonas\Domain\Model\User;
 use Jonas\Domain\Service\UserService;
 
@@ -11,10 +12,12 @@ class UserController
     use Renderer;
 
     private UserService $userService;
+    private UserDao $userDao;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, UserDao $userDao)
     {
         $this->userService = $userService;
+        $this->userDao = $userDao;
     }
 
     public function index(): void
@@ -37,7 +40,7 @@ class UserController
         $user = $this->userDao->getById($id);
 
         echo $this->render("forms.php", [
-            "user" => $user
+            "user" => $user[$id]
         ]);
     }
 
@@ -62,6 +65,7 @@ class UserController
     {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) ?? null;
+        $colors = $_POST['colors'];
         $id = $_GET['id'];
 
         if (!$name || !$email) {

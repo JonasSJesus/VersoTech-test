@@ -7,13 +7,12 @@ class User
     private int $id;
     public readonly string $name;
     public readonly string $email;
-    public readonly ?Color $color;
+    public array $color = [];
 
-    public function __construct(string $name, string $email, Color $color = null)
+    public function __construct(string $name, string $email)
     {
         $this->name = $name;
         $this->email = $email;
-        $this->color = $color;
     }
 
     public function setId(int $id): void
@@ -25,6 +24,22 @@ class User
     {
         return $this->id;
     }
+
+    public function getColor(): array
+    {
+        $colorIdCollection = [];
+        foreach ($this->color as $color) {
+            $colorIdCollection[$color->getId()] = $color->colorName ?? null;
+        }
+
+        return $colorIdCollection;
+    }
+
+    public function setColor(Color $color): void
+    {
+        $this->color[$color->getId()] = $color;
+    }
+
 
 
 }

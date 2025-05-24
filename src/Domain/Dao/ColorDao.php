@@ -55,6 +55,9 @@ class ColorDao
 
     public function createObj(array $data): Color
     {
-        return new Color($data['id'], $data['name']);
+        $color = new Color($data['name']);
+        $color->setId($data['id']);
+
+        return $color;
     }
 }

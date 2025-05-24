@@ -35,7 +35,7 @@ class UserService
             foreach ($colors as $color) {
                 $this->userColorDao->addColorUserLink(
                     $userId,
-                    $this->colorDao->getById($color)->id
+                    $this->colorDao->getById($color)->getId()
                 );
             }
 
@@ -49,12 +49,12 @@ class UserService
 
     public function linkColorToUser()
     {
-        
+        // TODO: Implementar
     }
 
     public function unlinkColorFromUser()
     {
-        
+        // TODO: Implementar
     }
 
 }

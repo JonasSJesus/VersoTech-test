@@ -14,11 +14,11 @@ $userColorDao = new UserColorDao($connection);
 $userService = new UserService($connection, $userDao, $colorDao, $userColorDao);
 
 return [
-    "GET|/" => [new UserController($userService), 'index'],
-    "GET|/insert-user" => [new UserController($userService), 'forms'],
-    "GET|/update-user" => [new UserController($userService), 'editForm'],
-    "GET|/delete-user" => [new UserController($userService), 'destroy'],
+    "GET|/" => [new UserController($userService, $userDao), 'index'],
+    "GET|/insert-user" => [new UserController($userService, $userDao), 'forms'],
+    "GET|/update-user" => [new UserController($userService, $userDao), 'editForm'],
+    "GET|/delete-user" => [new UserController($userService, $userDao), 'destroy'],
 
-    "POST|/insert-user" => [new UserController($userService), 'store'],
-    "POST|/update-user" => [new UserController($userService), 'update'],
+    "POST|/insert-user" => [new UserController($userService, $userDao), 'store'],
+    "POST|/update-user" => [new UserController($userService, $userDao), 'update'],
 ];
