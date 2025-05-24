@@ -40,6 +40,16 @@ class User
         $this->color[$color->getId()] = $color;
     }
 
+    public function setColorIdFromArray(array $colors): void
+    {
+        foreach ($colors as $color) {
+            $this->color[$color] = $color;
+        }
+    }
 
+    public function getColorId()
+    {
+        return $this->color;
+    }
 
 }

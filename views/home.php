@@ -15,7 +15,7 @@
                             <th scope="col" class="ps-3">#</th>
                             <th scope="col">Nome</th>
                             <th scope="col">Email</th>
-                            <th scope="col" class="text-center">Cor</th>
+                            <th scope="col" class="text-center">Cores</th>
                             <th scope="col" class="text-end pe-3">Ações</th>
                         </tr>
                     </thead>

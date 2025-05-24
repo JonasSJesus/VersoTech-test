@@ -2,6 +2,7 @@
 
 namespace Jonas\Domain\Controller;
 
+use Jonas\Core\FlashMessages\Flash;
 use Jonas\Core\TemplateEngine\Renderer;
 use Jonas\Domain\Dao\UserDao;
 use Jonas\Domain\Model\User;
@@ -9,7 +10,7 @@ use Jonas\Domain\Service\UserService;
 
 class UserController
 {
-    use Renderer;
+    use Renderer, Flash;
 
     private UserService $userService;
     private UserDao $userDao;
@@ -55,17 +56,18 @@ class UserController
             return;
         }
 
-        $user = new User($name, $email);
-//        $color = new Color(); // TODO: fazer isso funcionar!
+        $this->userService->createUserWithColor($name, $email, $colors);
 
-        $this->userService->createUserWithColor($user, $colors);
+        $this->registerMessage("Usuario criado com sucesso!");
+
+        header("Location: /");
     }
 
     public function update(): void
     {
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) ?? null;
-        $colors = $_POST['colors'];
+        $colors = $_POST['colors'] ?? null;
         $id = $_GET['id'];
 
         if (!$name || !$email) {
@@ -73,7 +75,7 @@ class UserController
             return;
         }
 
-        $this->userDao->update($id, $name, $email);
+        $this->userService->updateUser($name, $email, $colors, $id);
 
         header("Location: /");
     }
@@ -82,7 +84,9 @@ class UserController
     {
         $id = $_GET['id'];
 
-        $this->userDao->delete($id);
+        $this->userService->deleteUserAndLinks($id);
+
+        header("Location: /");
     }
 
 }

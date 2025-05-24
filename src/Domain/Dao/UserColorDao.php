@@ -25,24 +25,13 @@ class UserColorDao
         return $stmt->execute();
     }
 
-    public function getAllLinks()
+    public function deleteLinks(int $userId)
     {
-        $sql = "SELECT u.name,
-                       u.email,
-                       c.name
-                FROM users AS u
-                LEFT JOIN user_colors AS uc ON u.id = uc.user_id
-                LEFT JOIN colors AS c ON uc.color_id = c.id;
-                ";
-        
-        $stmt = $this->conn->query($sql);
-        $data = $stmt->fetchAll();
-        
-        return array_map();
-    }
+        $sql = "DELETE FROM user_colors WHERE user_id = :user_id;";
 
-    public function createObj()
-    {
-        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":user_id", $userId);
+
+        return $stmt->execute();
     }
 }

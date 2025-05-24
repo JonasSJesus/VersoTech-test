@@ -73,14 +73,14 @@ class UserDao
         return $this->createObj($data);
     }
 
-    public function update(int $id, string $name, string $email)
+    public function update(User $user)
     {
         $sql = "UPDATE users SET name = :name, email = :email WHERE id = :id;";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':name', $user->name);
+        $stmt->bindValue(':email', $user->email);
+        $stmt->bindValue(':id', $user->getId());
 
         return $stmt->execute();
     }

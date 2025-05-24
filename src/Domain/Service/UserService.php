@@ -25,10 +25,11 @@ class UserService
         $this->userColorDao = $userColorDao;
     }
 
-    public function createUserWithColor(User $user, array $colors)
+    public function createUserWithColor(string $name, string $email, array $colors)
     {
-        $this->conn->beginTransaction();
+        $user = new User($name, $email);
 
+        $this->conn->beginTransaction();
         try {
             $userId = $this->userDao->add($user);
 
@@ -47,14 +48,48 @@ class UserService
         }
     }
 
-    public function linkColorToUser()
+    public function updateUser(string $name, string $email, array|null $colors, int $id)
     {
-        // TODO: Implementar
+        $user = new User($name, $email);
+        $user->setId($id);
+
+        $this->conn->beginTransaction();
+
+        try {
+            $this->userDao->update($user);
+
+            if (isset($colors)) {
+                $this->userColorDao->deleteLinks($user->getId());
+
+                foreach ($colors as $colorId) {
+                    $this->userColorDao->addColorUserLink($user->getId(), $this->colorDao->getById($colorId)->getId());
+                }
+            }
+
+            $this->conn->commit();
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+
+            echo $e->getMessage();
+        }
     }
 
-    public function unlinkColorFromUser()
+    public function deleteUserAndLinks(int $userId): bool|string
     {
-        // TODO: Implementar
+        $this->conn->beginTransaction();
+
+        try {
+            $this->userColorDao->deleteLinks($userId);
+
+            $this->userDao->delete($userId);
+
+            return $this->conn->commit();
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+
+            return $e->getMessage();
+        }
+
     }
 
 }
