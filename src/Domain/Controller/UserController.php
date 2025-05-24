@@ -77,6 +77,7 @@ class UserController
 
         $this->userService->updateUser($name, $email, $colors, $id);
 
+        $this->registerMessage("Usuario atualizado.");
         header("Location: /");
     }
 
@@ -86,6 +87,7 @@ class UserController
 
         $this->userService->deleteUserAndLinks($id);
 
+        $this->registerMessage("Usuario deletado do banco de dados.");
         header("Location: /");
     }
 
