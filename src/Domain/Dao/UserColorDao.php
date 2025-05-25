@@ -25,7 +25,7 @@ class UserColorDao
         return $stmt->execute();
     }
 
-    public function deleteLinks(int $userId)
+    public function deleteLinks(int $userId): bool
     {
         $sql = "DELETE FROM user_colors WHERE user_id = :user_id;";
 

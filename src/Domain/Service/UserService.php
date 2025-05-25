@@ -25,7 +25,7 @@ class UserService
         $this->userColorDao = $userColorDao;
     }
 
-    public function createUserWithColor(string $name, string $email, array $colors)
+    public function createUserWithColor(string $name, string $email, array $colors): bool
     {
         $user = new User($name, $email);
 
@@ -41,14 +41,15 @@ class UserService
             }
 
             $this->conn->commit();
-        } catch (PDOException $e){
 
+            return true;
+        } catch (PDOException $e){
             $this->conn->rollBack();
-            echo $e->getMessage();
+            return false;
         }
     }
 
-    public function updateUser(string $name, string $email, array|null $colors, int $id)
+    public function updateUser(string $name, string $email, array|null $colors, int $id): bool
     {
         $user = new User($name, $email);
         $user->setId($id);
@@ -67,14 +68,16 @@ class UserService
             }
 
             $this->conn->commit();
+
+            return true;
         } catch (PDOException $e) {
             $this->conn->rollBack();
 
-            echo $e->getMessage();
+            return false;
         }
     }
 
-    public function deleteUserAndLinks(int $userId): bool|string
+    public function deleteUserAndLinks(int $userId): bool
     {
         $this->conn->beginTransaction();
 
@@ -83,11 +86,13 @@ class UserService
 
             $this->userDao->delete($userId);
 
-            return $this->conn->commit();
+            $this->conn->commit();
+
+            return true;
         } catch (PDOException $e) {
             $this->conn->rollBack();
 
-            return $e->getMessage();
+            return false;
         }
 
     }

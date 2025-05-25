@@ -51,7 +51,7 @@ class UserDao
         return $this->conn->lastInsertId();
     }
 
-    public function getById(int $id)
+    public function getById(int $id): array
     {
         $sql = "SELECT u.id AS userId,
                        c.id AS colorId,
@@ -73,7 +73,7 @@ class UserDao
         return $this->createObj($data);
     }
 
-    public function update(User $user)
+    public function update(User $user): bool
     {
         $sql = "UPDATE users SET name = :name, email = :email WHERE id = :id;";
 
@@ -85,7 +85,7 @@ class UserDao
         return $stmt->execute();
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         $sql = "DELETE FROM users WHERE id = :id;";
 
@@ -96,7 +96,13 @@ class UserDao
     }
 
 
-    private function createObj(array $data)
+    /**
+     * Realiza uma filtragem no retorno de usuario, evitando usuarios repetidos
+     *
+     * @param array $data
+     * @return User[] Retorna um array de usuarios com suas cores associadas
+     */
+    private function createObj(array $data): array
     {
         $userList = [];
         foreach ($data as $row) {

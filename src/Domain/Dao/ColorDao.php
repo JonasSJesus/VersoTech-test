@@ -29,15 +29,6 @@ class ColorDao
         }, $data);
     }
 
-    public function add(Color $color): bool
-    {
-        $sql = "INSERT INTO colors (name) VALUES (:name);";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':name', $color->colorName);
-
-        return $stmt->execute();
-    }
 
     public function getById(int $id): Color
     {

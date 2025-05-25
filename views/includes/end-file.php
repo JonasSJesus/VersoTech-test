@@ -1,19 +1,22 @@
+
 <?php if (isset($_SESSION['flash'])): ?>
-    <div class="alert alert-success alert-dismissible container" id="liveAlertPlaceholder" role="alert">
-        <?= $_SESSION['flash']; ?>
-        <?php unset($_SESSION['flash']); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <?php if (array_key_exists('success', $_SESSION['flash'])): ?>
 
-<!--    <div id="liveAlertPlaceholder">-->
-<!--        <div>-->
-<!--            <div class="alert alert-success alert-dismissible" role="alert">-->
-<!--                <div>Nice, you triggered this alert message!</div>-->
-<!--                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+        <div class="alert alert-success alert-dismissible container" id="liveAlertPlaceholder" role="alert">
+            <?= $_SESSION['flash']['success']; ?>
+            <?php unset($_SESSION['flash']); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
+    <?php elseif (array_key_exists('error', $_SESSION['flash'])): ?>
+
+        <div class="alert alert-danger alert-dismissible container" id="liveAlertPlaceholder" role="alert">
+            <?= $_SESSION['flash']['error']; ?>
+            <?php unset($_SESSION['flash']); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    <?php endif; ?>
 <?php endif; ?>
 
 

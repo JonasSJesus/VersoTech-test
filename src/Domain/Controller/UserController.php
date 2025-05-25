@@ -5,7 +5,6 @@ namespace Jonas\Domain\Controller;
 use Jonas\Core\FlashMessages\Flash;
 use Jonas\Core\TemplateEngine\Renderer;
 use Jonas\Domain\Dao\UserDao;
-use Jonas\Domain\Model\User;
 use Jonas\Domain\Service\UserService;
 
 class UserController
@@ -52,14 +51,19 @@ class UserController
         $colors = $_POST['colors'];
 
         if (!$name || !$email) {
+            $this->registerMessage('error', "Campos invalidos, tente novamente");
             header("Location: /insert-user");
             return;
         }
 
-        $this->userService->createUserWithColor($name, $email, $colors);
+        if (!$this->userService->createUserWithColor($name, $email, $colors)) {
+            $this->registerMessage('error', "Erro ao cadastrar o usuario");
+            header("Location: /");
 
-        $this->registerMessage("Usuario criado com sucesso!");
+            return;
+        }
 
+        $this->registerMessage('success', "Usuario criado com sucesso!");
         header("Location: /");
     }
 
@@ -71,23 +75,35 @@ class UserController
         $id = $_GET['id'];
 
         if (!$name || !$email) {
+            $this->registerMessage('error', "Campos invalidos, tente novamente");
             header("Location: /update-user?id=" . $id);
+
             return;
         }
 
-        $this->userService->updateUser($name, $email, $colors, $id);
+        if (!$this->userService->updateUser($name, $email, $colors, $id)) {
+            $this->registerMessage('error', "Erro ao atualizar o usuario");
+            header("Location: /");
 
-        $this->registerMessage("Usuario atualizado.");
+            return;
+        }
+
+        $this->registerMessage('success', "Usuario atualizado.");
         header("Location: /");
     }
 
-    public function destroy()
+    public function destroy(): void
     {
         $id = $_GET['id'];
 
-        $this->userService->deleteUserAndLinks($id);
+        if (!$this->userService->deleteUserAndLinks($id)) {
+            $this->registerMessage('error', "Erro ao deletar o usuario");
+            header("Location: /");
 
-        $this->registerMessage("Usuario deletado do banco de dados.");
+            return;
+        }
+
+        $this->registerMessage('success', "Usuario deletado do banco de dados.");
         header("Location: /");
     }
 
