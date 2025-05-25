@@ -1,3 +1,27 @@
+## Sobre a resolução do teste
+Esta aplicação foi desenvolvida seguindo boas práticas de PHP, utilizando o padrão Front Controller e a arquitetura em camadas baseada no padrão MVC (Model, View, Controller), com a adição de uma Service Layer (Camada de Serviço) para separação da lógica de negócio.
+
+### Instalação
+- Durante o desenvolvimento, foi utilizado o Composer exclusivamente para o gerenciamento de autoload e automação de scripts (neste caso, para iniciar o servidor PHP).
+```
+# clone este repositório
+git clone https://github.com/JonasSJesus/VersoTech-test.git
+
+# Navegue até a pasta
+cd VersoTech-test-master
+
+# Instale o autoload com composer
+composer install
+
+# Rode o servidor PHP
+composer start
+
+# Accesse o seguinte link no seu navegador
+http://localhost:8080/
+```
+
+<hr>
+
 # Teste de conhecimentos PHP + Banco de dados
 ##### Objetivo
 Criar um Crud simples, totalmente desenvolvido em PHP, sem a utilização de frameworks, onde será possível Criar/Editar/Excluir/Listar usuários. O sistema também deve possuir a possibilidade de vincular/desvincular várias cores ao usuário.
